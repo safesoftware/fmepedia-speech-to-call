@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <link rel="stylesheet" href="">
+  <!-- JQuery -->
+  <script src="libs/jquery-1.10.1.js"></script>
+
+  <!-- Bootstrap -->
+  <!--http://getbootstrap.com/2.3.2/-->
+  <script src="libs/bootstrap/js/bootstrap.js"></script>
+  <link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  
+  <!-- Generic -->
+  <link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">        
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+
+      <div class="brand">FME Server<span class="hidden-tiny"> Demos</span></div>
+         
+      <div class="nav-collapse collapse">
+        <a href="https://github.com/safesoftware/spatialdashboard" class="btn">
+          <img src="libs/github-logo.png"> Fork GitHub
+        </a>
+        <a href="https://github.com/safesoftware/spatialdashboard/archive/master.zip" class="btn">
+          <i class="icon-download-alt"></i> Download Zip
+        </a>
+      </div>
+      <span class="hidden-phone" id="safe-ribbon"><a href="http://www.safe.com">Powered by FME</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>
+      Speech to Phone
+    </h1>
+    <p class="lead">Record a message in the web browser and then send the message to a phone.</p>
+    <hr>
+
+    <h4>Step 1: Record the message</h4>
+    <div class="well">
+
+      <div id="info">
+        <p id="info_start" class="lead">Click on the microphone icon and begin speaking.</p>
+        <p id="info_speak_now">Speak now.</p>
+        <p id="info_no_speech">No speech was detected. You may need to adjust your
+          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+            microphone settings</a>.</p>
+        <p id="info_no_microphone" style="display:none">
+          No microphone was found. Ensure that a microphone is installed and that
+          <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+          microphone settings</a> are configured correctly.</p>
+        <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+        <p id="info_denied">Permission to use microphone was denied.</p>
+        <p id="info_blocked">Permission to use microphone is blocked. To change,
+          go to chrome://settings/contentExceptions#media-stream</p>
+        <p id="info_upgrade">Web Speech API is not supported by this browser.
+           Upgrade to <a href="//www.google.com/chrome">Chrome</a>
+           version 25 or later.</p>
+      </div>
+      <div class="right">
+        <button id="start_button" onclick="startButton(event)">
+          <img id="start_img" src="https://www.google.com/intl/en/chrome/assets/common/images/content/mic.gif" alt="Start"></button>
+      </div>
+      <div id="results">
+        <span id="final_span" class="final"></span>
+        <span id="interim_span" class="interim"></span>
+        <p>
+      </div>
+      <div class="center">
+        <p>
+        <div id="div_language">
+          <select id="select_language" onchange="updateCountry()"></select>
+          &nbsp;&nbsp;
+          <select id="select_dialect"></select>
+        </div>
+      </div>
+    </div>
+    <h4>Step 2: Send the message</h4>
+    <div class="well">
+      <form method="post" enctype="application/x-www-form-urlencoded" action="https://bluesky-safe-software.fmecloud.com/fmejobsubmitter/Stewart/TwilioService.fmw">
+        <fieldset>
+          <label>Call or SMS</label>
+          <select name="call_or_sms">
+            <option>Call</option>
+            <option>SMS</option>
+          </select>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Phone Number</label>
+          <input type="text" name="To" value="" /><br/>
+        </fieldset>
+
+      <input type="hidden" id="call-content" name="call_content" value="" /><br/>
+
+      <!-- Extra service-specific directives -->
+      <input type="hidden" name="opt_showresult" value="false">
+      <input type="hidden" name="opt_servicemode" value="sync">
+      <!-- End of Extra service-specific directives -->
+
+      <input type="submit" value="Run">
+      </form>
+    </div>  
+
+  </div>
+  <script src="js/index.js"></script>
+</body>
+</html>

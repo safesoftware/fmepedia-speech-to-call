@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <link rel="stylesheet" href="">
+  <!-- JQuery -->
+  <script src="libs/jquery-1.10.1.js"></script>
+
+  <!-- Bootstrap -->
+  <!--http://getbootstrap.com/2.3.2/-->
+  <script src="libs/bootstrap/js/bootstrap.js"></script>
+  <link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="libs/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  
+  <!-- Generic -->
+  <link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">        
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+
+      <div class="brand">FME Server<span class="hidden-tiny"> Demos</span></div>
+         
+      <div class="nav-collapse collapse">
+        <a href="https://github.com/safesoftware/spatialdashboard" class="btn">
+          <img src="libs/github-logo.png"> Fork GitHub
+        </a>
+        <a href="https://github.com/safesoftware/spatialdashboard/archive/master.zip" class="btn">
+          <i class="icon-download-alt"></i> Download Zip
+        </a>
+      </div>
+      <span class="hidden-phone" id="safe-ribbon"><a href="http://www.safe.com">Powered by FME</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!--
+        Ideally these elements aren't created until it's confirmed that the 
+        client supports video/camera, but for the sake of illustrating the 
+        elements involved, they are created with markup (not JavaScript)
+      -->
+      <h1>Take a photo and send a MMS</h1>
+      <p class="lead">Take a photo using your webcam or camera then send the image as a MMS to a smartphone.</p>
+
+      <h4>Step 1: Use the webcam to take a photo</h4>
+      <div class="well center">
+        <video id="video" width="640" height="480" autoplay></video>
+        <br>
+        <button class="btn btn-primary" id="snap" class="sexyButton">Snap Photo</button>
+        <br>
+        <canvas id="canvas" width="640" height="480"></canvas>  
+      </div>
+      
+      <h4>Step 2: Enter the number you wish to send the MMS to.</h4>
+      <div class="well">
+        <form method="post" enctype="application/x-www-form-urlencoded" action="https://bluesky-safe-software.fmecloud.com/fmejobsubmitter/Stewart/TwilioService.fmw">
+
+          <input type="hidden" name="call_or_sms" value="SMS" />
+          <fieldset>
+            <label>Phone Number</label>
+            <input type="text" name="To" value="" /><br/>
+          </fieldset>
+          <fieldset>
+            <label>Message</label>
+            <textarea id="call-content" name="call_content" value="" /></textarea>
+          </fieldset>
+
+          <!-- Extra service-specific directives -->
+          <input type="hidden" name="opt_showresult" value="false">
+          <input type="hidden" name="opt_servicemode" value="sync">
+          <!-- End of Extra service-specific directives -->
+
+          <input class="btn btn-primary btn-large" onclick="submitJob();">
+        </form>
+      </div>
+  </div>      
+  <script>
+
+    // Put event listeners into place
+    window.addEventListener("DOMContentLoaded", function() {
+      // Grab elements, create settings, etc.
+      var canvas = document.getElementById("canvas"),
+      context = canvas.getContext("2d"),
+      video = document.getElementById("video"),
+      videoObj = { "video": true },
+      errBack = function(error) {
+        console.log("Video capture error: ", error.code); 
+      };
+
+      // Put video listeners into place
+      if(navigator.getUserMedia) { // Standard
+        navigator.getUserMedia(videoObj, function(stream) {
+          video.src = stream;
+          video.play();
+        }, errBack);
+      } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+        navigator.webkitGetUserMedia(videoObj, function(stream){
+          video.src = window.webkitURL.createObjectURL(stream);
+          video.play();
+        }, errBack);
+      } else if(navigator.mozGetUserMedia) { // WebKit-prefixed
+        navigator.mozGetUserMedia(videoObj, function(stream){
+          video.src = window.URL.createObjectURL(stream);
+          video.play();
+        }, errBack);
+      }
+
+      // Trigger photo take
+      document.getElementById("snap").addEventListener("click", function() {
+        context.drawImage(video, 0, 0, 640, 480);
+      });
+    }, false);
+    function submitJob(){
+      $.post('https://bluesky-safe-software.fmecloud.com/fmejobsubmitter/Stewart/photo_upload.fmw?opt_showresult=false&opt_servicemode=sync&opt_responseformat=json',canvas.toDataURL('image/jpeg'));
+    }
+          
+  </script>
+
+</body>
+</html>
