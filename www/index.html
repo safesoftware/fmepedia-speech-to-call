@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title></title>
+  <title>FMEpedia demo - Speech to Phone</title>
   <link rel="stylesheet" href="">
   <!-- JQuery -->
   <script src="libs/jquery-1.10.1.js"></script>
@@ -17,6 +17,7 @@
   
   <!-- Generic -->
   <link rel="stylesheet" href="css/index.css">
+  <script type="text/javascript" src="http://api.fmeserver.com/js/v1.1/FMEServer.js"></script>
 
 </head>
 <body>
@@ -92,7 +93,7 @@
     </div>
     <h4>Step 2: Send the message</h4>
     <div class="well">
-      <form method="post" enctype="application/x-www-form-urlencoded" action="https://bluesky-safe-software.fmecloud.com/fmejobsubmitter/Stewart/TwilioService.fmw">
+      <form method="post" id="fme-form">
         <fieldset>
           <label>Call or SMS</label>
           <select name="call_or_sms">
@@ -108,16 +109,25 @@
 
       <input type="hidden" id="call-content" name="call_content" value="" /><br/>
 
-      <!-- Extra service-specific directives -->
-      <input type="hidden" name="opt_showresult" value="false">
-      <input type="hidden" name="opt_servicemode" value="sync">
-      <!-- End of Extra service-specific directives -->
-
-      <input type="submit" value="Run">
+      <input type="button" value="Submit" onclick="submitJob();">
       </form>
     </div>  
 
   </div>
-  <script src="js/index.js"></script>
+
+  <div id="success-modal" class="modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>Call/SMS Made</h3>
+    </div>
+    <div class="modal-body">
+      <p>Your call/SMS is on its way to the recipient.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal">Close</a>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>
